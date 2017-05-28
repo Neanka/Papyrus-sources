@@ -1,0 +1,1 @@
+Scriptname FCMQ90PipboyScript extends ObjectReference Const

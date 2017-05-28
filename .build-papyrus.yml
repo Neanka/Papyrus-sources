@@ -1,0 +1,16 @@
+game: fallout4
+compiler: C:\Fallout 4\Papyrus Compiler\PapyrusCompiler.exe
+flags: Institute_Papyrus_Flags.flg
+output: C:\Fallout 4\Data\Scripts\
+imports:
+    - C:\Fallout 4\Data\Scripts\Source\User
+    - C:\Fallout 4\Data\Scripts\Source\DLC06
+    - C:\Fallout 4\Data\Scripts\Source\DLC05
+    - C:\Fallout 4\Data\Scripts\Source\DLC04
+    - C:\Fallout 4\Data\Scripts\Source\DLC03
+    - C:\Fallout 4\Data\Scripts\Source\DLC02
+    - C:\Fallout 4\Data\Scripts\Source\DLC01
+    - C:\Fallout 4\Data\Scripts\Source\Base
+optimize: false
+release: false
+final: false
