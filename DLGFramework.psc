@@ -5,7 +5,6 @@ actor playerref
 int Property iVersion = 10 AutoReadOnly
 
 Struct dialogueentries
-    string sScene
     string qtext
     int iFilterFlag
     int qType
@@ -15,6 +14,13 @@ Struct dialogueentries
     int qTextColor
     int qBorderColor
 EndStruct
+
+Group colors
+  int Property ct_red = 16724787 AutoReadOnly
+  int Property ct_white = 16777215 AutoReadOnly
+  int Property ct_green = 26163 AutoReadOnly
+  int Property ct_orange = 16750899 AutoReadOnly
+EndGroup
 
 ScriptObject currentscenescript
 
@@ -27,7 +33,8 @@ string currentscenename = "None"
 InputEnableLayer myLayer
 
 bool Function checkVersion(int iaReqVersion)
-  If (GetVersion() < iaReqVersion)
+  If (GetVersion() != iaReqVersion)
+    Debug.MessageBox("This scene required DLGFramework version "+iaReqVersion)
     return false
   Else
     return true
@@ -109,12 +116,20 @@ Function requestsendflag(int flag)
   flagsended = true
 EndFunction
 
+Function Addflag(int flag)
+  Var[] a = new Var[1]
+  a[0] = flag
+  UI.Invoke("DialogueMenu", "root.addfilterflag", a)
+EndFunction
 
-; colors: 16777215 white, 26163 green , 16724787 red, 16750899 orange
+Function Removeflag(int flag)
+  Var[] a = new Var[1]
+  a[0] = flag
+  UI.Invoke("DialogueMenu", "root.removefilterflag", a)
+EndFunction
 
-dialogueentries Function createListEntry(string asScene, string asText, int aiFF = 16, int aiType = 0, int aiVal = 0, int aiMinVal = 0, int aiMaxVal = 0, int aiTextColor = 16777215, int aiBorderColor = 16777215)
+dialogueentries Function createListEntry(string asText, int aiFF = 16, int aiType = 0, int aiVal = 0, int aiMinVal = 0, int aiMaxVal = 0, int aiTextColor = 16777215, int aiBorderColor = 16777215)
   dialogueentries so = new dialogueentries
-  so.sScene = asScene
   so.qtext = asText
   so.iFilterFlag = aiFF
   so.qType = aiType
@@ -147,9 +162,10 @@ Function InitNewDialog(ScriptObject ascript,String ascenename, Var avar, int aFF
   EndIf
 EndFunction
 
-Function OnDialogueOptionReturned(string SceneName, int OptionIdx)
-    Var[] a = new Var[2]
+Function OnDialogueOptionReturned(string SceneName, int OptionIdx, int val)
+    Var[] a = new Var[3]
     a[0] = SceneName
     a[1] = OptionIdx
+    a[2] = val
     currentscenescript.CallFunctionNoWait("OnDialogueOptionReturned", a)
 EndFunction
