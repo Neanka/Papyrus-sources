@@ -10,6 +10,7 @@ EndEvent
 Function registercustomevents()
   RegisterForKey(84)
   RegisterForKey(89)
+  RegisterForExternalEvent("LevelUp::Ready", "OnLevelUpReady")
 EndFunction
 
 Event Actor.OnPlayerLoadGame(Actor akSender)
@@ -18,9 +19,13 @@ EndEvent
 
 Event OnKeyDown(int keyCode)
   If(keyCode == 84)
-    def.showlevelupmenu()
+    def.addexp(50)
   EndIf
   If(keyCode == 89)
-    def.showsleepwaitmenu()
+    def.openmenu("sleepwaitmenu")
   EndIf
 EndEvent
+
+Function OnLevelUpReady()
+Debug.MessageBox("levelup ready")
+EndFunction
