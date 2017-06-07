@@ -21,8 +21,8 @@ Function registerevents()
   RegisterForExternalEvent("healH", "OnhealH")
   RegisterForExternalEvent("requestskills", "Onrequestskills")
 
-  RegisterForExternalEvent("LevelUpInit", "OnLevelUpInit")
-  RegisterForExternalEvent("LevelUp::RequestSkills", "OnLevelUpRequestSkills")
+;  RegisterForExternalEvent("LevelUpInit", "OnLevelUpInit")
+;  RegisterForExternalEvent("LevelUp::RequestSkills", "OnLevelUpRequestSkills")
   RegisterForExternalEvent("LevelUp::ReturnSkills", "OnLevelUpReturnSkills")
 EndFunction
 
@@ -48,7 +48,7 @@ Event OnMenuOpenCloseEvent(string asMenuName, bool abOpening)
   endif
   if (asMenuName== "LevelUpMenu")
       if (abOpening)
-        OnLevelUpRequestSkills()
+      ;  OnLevelUpRequestSkills()
       endif
   endif
 endEvent
