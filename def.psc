@@ -17,6 +17,8 @@ EndStruct
 
 String Function exe(String command) global native
 
+String Function tracelevel() global native
+
 DEFCondition[] Function traceperk(Perk aperk) global native
 
 String Function getperkreqs(Perk aperk, int PClevel) global native
@@ -25,10 +27,8 @@ bool Function openmenu(String command) global
   exe("showmenu "+command)
 EndFunction
 
-bool Function addexp(int value) global
-  exe("player.modav 000002C9 "+value)
+String Function addexp(int value) global
+  return exe("player.modav 000002C9 "+value)
 EndFunction
-
-;bool Function PopulateLevelUpMenu(FormList perklist,FormList skillslist, ActorValue SP, ActorValue PP, int PClevel) global native
 
 bool Function SetLVLUPVars(FormList perklist,FormList skillslist, ActorValue SP, ActorValue PP, int PClevel) global native

@@ -1,6 +1,8 @@
-Scriptname def_plugin extends Quest
+Scriptname PRKFramework extends Quest
 
 actor playerref
+
+int Property iVersion = 1 AutoReadOnly
 
 Event OnQuestInit()
   playerref = Game.GetPlayer()
@@ -8,7 +10,10 @@ Event OnQuestInit()
   registercustomevents()
 EndEvent
 
+CustomEvent PRKFReady
+
 Function registercustomevents()
+  Pperk_list.Revert()
   RegisterForKey(103)
   RegisterForKey(104)
   RegisterForKey(100)
@@ -16,11 +21,38 @@ Function registercustomevents()
   RegisterForExternalEvent("LevelUp::Ready", "OnLevelUpReady")
   RegisterForMenuOpenCloseEvent("LevelUpMenu")
   FillUnlearnedPerks(Pperk_list)
+  SendPRKFReadyEvent()
+EndFunction
+
+Function SendPRKFReadyEvent()
+	Var[] args = new Var[0]
+	sendCustomEvent("PRKFReady", args)
 EndFunction
 
 Event Actor.OnPlayerLoadGame(Actor akSender)
   registercustomevents()
 EndEvent
+
+bool Function checkVersion(int aiReqVersion, String asName)
+  If (GetVersion() != aiReqVersion)
+    Debug.MessageBox(asName + " required PRKFramework version "+aiReqVersion)
+    return false
+  Else
+    return true
+  EndIf
+EndFunction
+
+int Function GetVersion()
+  return iVersion
+EndFunction
+
+PRKFramework Function GetInstance() global
+    If (Game.IsPluginInstalled("PRKFramework.esm"))
+        return Game.GetFormFromFile(0xF99, "PRKFramework.esm") as PRKFramework
+    Else
+        return None
+    EndIf
+EndFunction
 
 Event OnMenuOpenCloseEvent(string asMenuName, bool abOpening)
   if (asMenuName== "LevelUpMenu")
@@ -32,7 +64,7 @@ endEvent
 Event OnKeyDown(int keyCode)
   If(keyCode == 103)
     Debug.Notification("added 50 exp")
-    def.addexp(50)
+    Debug.Notification(def.addexp(50))
   Debug.Trace(Game.GetInstalledPlugins())
   EndIf
   If(keyCode == 104)
@@ -40,14 +72,15 @@ Event OnKeyDown(int keyCode)
   EndIf
   If(keyCode == 100)
     def.exe("player.addperk 4d869")
+    FillUnlearnedPerks(Pperk_list)
   EndIf
   If(keyCode == 101)
     def.exe("player.addperk 65df5")
+    FillUnlearnedPerks(Pperk_list)
   EndIf
 EndEvent
 
 Function OnLevelUpReady()
-  FillUnlearnedPerks(Pperk_list)
   If (def.SetLVLUPVars(Punlearned_perks,Pskills_list,PSkillPoints,PPerkPoints,Game.GetPlayerLevel()))
     def.openmenu("levelupmenu")
   EndIf
@@ -76,6 +109,15 @@ Perk Function GetAvailablePerk(Perk aPerk)
     i += 1
   EndWhile
   return None
+EndFunction
+
+Function AddPerks(FormList afFL)
+  int i = 0
+  While i < afFL.GetSize()
+    Pperk_list.AddForm(afFL.GetAt(i))
+  i += 1
+  EndWhile
+  FillUnlearnedPerks(Pperk_list)
 EndFunction
 
 Group FLs
