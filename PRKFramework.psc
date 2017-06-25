@@ -4,23 +4,37 @@ actor playerref
 
 int Property iVersion = 1 AutoReadOnly
 
+FormList[] PerkList
+FormList[] SkillsList
+int ITPerkID = 0
+int NWPerkID = 0
+int APPerkID = 0
+int Property BasePPToAdd = 1 AutoReadOnly
+int PPToAdd
+int Property BaseSPToAdd = 0 AutoReadOnly
+int SPToAdd
+
 Event OnQuestInit()
   playerref = Game.GetPlayer()
   RegisterForRemoteEvent(playerref, "OnPlayerLoadGame")
+  PerkList = new FormList[0]
+  SkillsList = new FormList[0]
   registercustomevents()
 EndEvent
 
 CustomEvent PRKFReady
 
 Function registercustomevents()
-  Pperk_list.Revert()
   RegisterForKey(103)
   RegisterForKey(104)
   RegisterForKey(100)
   RegisterForKey(101)
   RegisterForExternalEvent("LevelUp::Ready", "OnLevelUpReady")
   RegisterForMenuOpenCloseEvent("LevelUpMenu")
-  FillUnlearnedPerks(Pperk_list)
+  PerkList.Clear()
+  SkillsList.Clear()
+  PPToAdd = BasePPToAdd
+  SPToAdd = BaseSPToAdd
   SendPRKFReadyEvent()
 EndFunction
 
@@ -47,8 +61,8 @@ int Function GetVersion()
 EndFunction
 
 PRKFramework Function GetInstance() global
-    If (Game.IsPluginInstalled("PRKFramework.esm"))
-        return Game.GetFormFromFile(0xF99, "PRKFramework.esm") as PRKFramework
+    If (Game.IsPluginInstalled("PRKFramework.esp"))
+        return Game.GetFormFromFile(0xF99, "PRKFramework.esp") as PRKFramework
     Else
         return None
     EndIf
@@ -65,65 +79,79 @@ Event OnKeyDown(int keyCode)
   If(keyCode == 103)
     Debug.Notification("added 50 exp")
     Debug.Notification(def.addexp(50))
-  Debug.Trace(Game.GetInstalledPlugins())
   EndIf
   If(keyCode == 104)
     OnLevelUpReady()
   EndIf
   If(keyCode == 100)
-    def.exe("player.addperk 4d869")
-    FillUnlearnedPerks(Pperk_list)
+    Debug.MessageBox(def.tracesmth())
   EndIf
   If(keyCode == 101)
-    def.exe("player.addperk 65df5")
-    FillUnlearnedPerks(Pperk_list)
+    Form stimpak = Game.GetForm(0x23736)
+    playerref.AddItem(stimpak, 9)
   EndIf
 EndEvent
 
 Function OnLevelUpReady()
-  If (def.SetLVLUPVars(Punlearned_perks,Pskills_list,PSkillPoints,PPerkPoints,Game.GetPlayerLevel()))
+;  Debug.MessageBox(APPerkID)
+  If (def.SetLVLUPVars(PerkList,SkillsList,PSkillPoints,PPerkPoints) && def.SetPerksIDs(ITPerkID,NWPerkID,APPerkID))
     def.openmenu("levelupmenu")
   EndIf
 EndFunction
 
-Function FillUnlearnedPerks(FormList PerkList)
-  Punlearned_perks.Revert()
-  int i = 0
-  While i < PerkList.GetSize()
-    Perk tempperk = GetAvailablePerk(PerkList.GetAt(i) as Perk)
-    If(tempperk)
-      Punlearned_perks.AddForm(tempperk)
-    EndIf
-  i += 1
-  EndWhile
+Function AddPerks(FormList afFL)
+  PerkList.Add(afFL)
 EndFunction
 
-Perk Function GetAvailablePerk(Perk aPerk)
+Function AddPerksToStart(FormList afFL)
+  PerkList.Insert(afFL,0)
+EndFunction
+
+Function AddSkills(FormList afFL)
+  SkillsList.Add(afFL)
+EndFunction
+
+Function AddSkillsToStart(FormList afFL)
+  SkillsList.Insert(afFL,0)
+EndFunction
+
+Function UniquePerks(int aITPerkID,int aNWPerkID,int aAPPerkID)
+  ITPerkID = aITPerkID
+  NWPerkID = aNWPerkID
+  APPerkID = aAPPerkID
+EndFunction
+
+int iLevel = 1
+Function LevelUp()
+  int iNewLevel = Game.GetPlayerLevel()
+  int iTimesToLevel = iNewLevel - iLevel
   int i = 0
-  Perk tempperk = aPerk
-  While i<aPerk.GetNumRanks()
-    If !playerref.HasPerk(tempperk)
-      return tempperk
-    EndIf
-    tempperk = tempperk.GetNextPerk()
+  While (i < iTimesToLevel)
+    Game.GetPlayer().ModValue(PPerkPoints, PPToAdd)
+    Game.GetPlayer().ModValue(PSkillPoints, SPToAdd)
     i += 1
   EndWhile
-  return None
+  iLevel = iNewLevel
 EndFunction
 
-Function AddPerks(FormList afFL)
-  int i = 0
-  While i < afFL.GetSize()
-    Pperk_list.AddForm(afFL.GetAt(i))
-  i += 1
-  EndWhile
-  FillUnlearnedPerks(Pperk_list)
+Function AddPPOnLevelUp(int count)
+  PPToAdd += count
+EndFunction
+
+Function AddPP(int count)
+  Game.GetPlayer().ModValue(PPerkPoints, count)
+EndFunction
+
+Function AddSPOnLevelUp(int count)
+  SPToAdd += count
+EndFunction
+
+Function AddSP(int count)
+  Game.GetPlayer().ModValue(PSkillPoints, count)
 EndFunction
 
 Group FLs
-  FormList Property Pperk_list Auto Const Mandatory
   FormList Property Pskills_list Auto Const Mandatory
-  FormList Property Punlearned_perks Auto Const Mandatory
 EndGroup
 
 ActorValue Property PPerkPoints Auto Const Mandatory

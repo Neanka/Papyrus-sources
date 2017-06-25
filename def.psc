@@ -17,11 +17,11 @@ EndStruct
 
 String Function exe(String command) global native
 
-String Function tracelevel() global native
+String Function tracesmth() global native
 
 DEFCondition[] Function traceperk(Perk aperk) global native
 
-String Function getperkreqs(Perk aperk, int PClevel) global native
+bool Function addpk(Perk aperk) global native
 
 bool Function openmenu(String command) global
   exe("showmenu "+command)
@@ -31,4 +31,6 @@ String Function addexp(int value) global
   return exe("player.modav 000002C9 "+value)
 EndFunction
 
-bool Function SetLVLUPVars(FormList perklist,FormList skillslist, ActorValue SP, ActorValue PP, int PClevel) global native
+bool Function SetLVLUPVars(FormList[] perklist,FormList[] skillslist, ActorValue SP, ActorValue PP) global native
+
+bool Function SetPerksIDs(int ITPerkID,int NWPerkID,int APPerkID) global native

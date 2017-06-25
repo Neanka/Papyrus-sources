@@ -15,11 +15,7 @@ Event OnQuestInit()
 EndEvent
 
 Event PRKFramework.PRKFReady(PRKFramework akSender, Var[] akArgs)
-  Debug.Notification("PRK READY")
-  PRK.AddPerks(Pvanilla_perks)
-  Debug.Trace(def.traceperk(Pdummyperk))
+  PRK.AddPerksToStart(Pvanilla_perks)
 EndEvent
 
 FormList Property Pvanilla_perks Auto Const Mandatory
-
-Perk Property Pdummyperk Auto Const Mandatory

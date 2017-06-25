@@ -2,12 +2,24 @@ Scriptname FOC_SPController extends Quest
 
 actor playerref
 int skillscount
+PRKFramework PRK
+
+String Property sname = "NV Skills" AutoReadOnly
+int Property iVersion = 1 AutoReadOnly
+int Property iFWNeedeVersion = 1 AutoReadOnly
 
 Event OnInit()
   playerref = Game.GetPlayer()
   RegisterForRemoteEvent(playerref, "OnPlayerLoadGame")
+  PRK = PRKFramework.GetInstance()
+  PRK.checkVersion(iFWNeedeVersion,sname)
+  RegisterForCustomEvent(PRK, "PRKFReady")
   registerevents()
   Debug.Notification("FOC_SPController started")
+EndEvent
+
+Event PRKFramework.PRKFReady(PRKFramework akSender, Var[] akArgs)
+  PRK.AddSkillsToStart(PSkillsList)
 EndEvent
 
 Event Actor.OnPlayerLoadGame(Actor aSender)
@@ -23,7 +35,7 @@ Function registerevents()
 
 ;  RegisterForExternalEvent("LevelUpInit", "OnLevelUpInit")
 ;  RegisterForExternalEvent("LevelUp::RequestSkills", "OnLevelUpRequestSkills")
-  RegisterForExternalEvent("LevelUp::ReturnSkills", "OnLevelUpReturnSkills")
+  ;RegisterForExternalEvent("LevelUp::ReturnSkills", "OnLevelUpReturnSkills")
 EndFunction
 
 Event OnMenuOpenCloseEvent(string asMenuName, bool abOpening)
@@ -179,3 +191,5 @@ Group AVIFs
 EndGroup
 
 ActorValue Property PPerkPoints Auto Const Mandatory
+
+FormList Property PSkillsList Auto Const Mandatory
