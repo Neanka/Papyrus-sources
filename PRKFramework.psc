@@ -9,10 +9,11 @@ FormList[] SkillsList
 int ITPerkID = 0
 int NWPerkID = 0
 int APPerkID = 0
-int Property BasePPToAdd = 1 AutoReadOnly
+int Property BasePPToAdd = 0 AutoReadOnly
 int PPToAdd
 int Property BaseSPToAdd = 0 AutoReadOnly
 int SPToAdd
+bool ready = false
 
 Event OnQuestInit()
   playerref = Game.GetPlayer()
@@ -23,6 +24,10 @@ Event OnQuestInit()
 EndEvent
 
 CustomEvent PRKFReady
+
+bool Function isReady()
+  return ready
+EndFunction
 
 Function registercustomevents()
   RegisterForKey(103)
@@ -39,6 +44,7 @@ Function registercustomevents()
 EndFunction
 
 Function SendPRKFReadyEvent()
+  ready = true
 	Var[] args = new Var[0]
 	sendCustomEvent("PRKFReady", args)
 EndFunction
@@ -84,11 +90,12 @@ Event OnKeyDown(int keyCode)
     OnLevelUpReady()
   EndIf
   If(keyCode == 100)
-    Debug.MessageBox(def.tracesmth())
+    ;Debug.MessageBox(def.tracesmth())
   EndIf
   If(keyCode == 101)
-    Form stimpak = Game.GetForm(0x23736)
-    playerref.AddItem(stimpak, 9)
+    ;Form stimpak = Game.GetForm(0x23736)
+    ;playerref.AddItem(stimpak, 9)
+    def.exe("hidemenu levelupmenu")
   EndIf
 EndEvent
 

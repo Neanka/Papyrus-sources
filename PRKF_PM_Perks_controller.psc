@@ -13,6 +13,11 @@ Event OnQuestInit()
   PRK.checkVersion(iFWNeedeVersion,sname)
   RegisterForRemoteEvent(playerref, "OnPlayerLoadGame")
   RegisterForCustomEvent(PRK, "PRKFReady")
+  if PRK.isReady()
+    PRK.UniquePerks(PPM_Intense_training01.GetFormID(),PPM_No_Weaknesses01.GetFormID(),PPM_Almost_Perfect01.GetFormID())
+    PRK.AddPerks(PPM_perks)
+    PRK.AddPPOnLevelUp(1)
+  endif
 EndEvent
 
 Event Actor.OnPlayerLoadGame(Actor akSender)
@@ -20,7 +25,6 @@ Event Actor.OnPlayerLoadGame(Actor akSender)
 EndEvent
 
 Event PRKFramework.PRKFReady(PRKFramework akSender, Var[] akArgs)
-;  PRK.IntenseTrainingPerk(PPM_Intense_training01.GetFormID())
   PRK.UniquePerks(PPM_Intense_training01.GetFormID(),PPM_No_Weaknesses01.GetFormID(),PPM_Almost_Perfect01.GetFormID())
   PRK.AddPerks(PPM_perks)
   PRK.AddPPOnLevelUp(1)
