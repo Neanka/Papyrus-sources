@@ -10,13 +10,10 @@ int Property iFWNeedeVersion = 1 AutoReadOnly
 Event OnQuestInit()
   playerref = Game.GetPlayer()
   PRK = PRKFramework.GetInstance()
-  PRK.checkVersion(iFWNeedeVersion,sname)
   RegisterForRemoteEvent(playerref, "OnPlayerLoadGame")
   RegisterForCustomEvent(PRK, "PRKFReady")
   if PRK.isReady()
-    PRK.UniquePerks(PPM_Intense_training01.GetFormID(),PPM_No_Weaknesses01.GetFormID(),PPM_Almost_Perfect01.GetFormID())
-    PRK.AddPerks(PPM_perks)
-    PRK.AddPPOnLevelUp(1)
+    DoMagic()
   endif
 EndEvent
 
@@ -25,10 +22,16 @@ Event Actor.OnPlayerLoadGame(Actor akSender)
 EndEvent
 
 Event PRKFramework.PRKFReady(PRKFramework akSender, Var[] akArgs)
-  PRK.UniquePerks(PPM_Intense_training01.GetFormID(),PPM_No_Weaknesses01.GetFormID(),PPM_Almost_Perfect01.GetFormID())
-  PRK.AddPerks(PPM_perks)
-  PRK.AddPPOnLevelUp(1)
+  DoMagic()
 EndEvent
+
+Function DoMagic()
+  If(Game.IsPluginInstalled("PRKF_PMPerks.esp") && PRK.checkVersion(iFWNeedeVersion,sname))
+    PRK.UniquePerks(PPM_Intense_training01.GetFormID(),PPM_No_Weaknesses01.GetFormID(),PPM_Almost_Perfect01.GetFormID())
+    PRK.AddPerks(PPM_perks)
+    PRK.AddPPOnLevelUp(1)
+  EndIf
+EndFunction
 
 FormList Property PPM_perks Auto Const Mandatory
 

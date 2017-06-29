@@ -12,15 +12,22 @@ Event OnInit()
   playerref = Game.GetPlayer()
   RegisterForRemoteEvent(playerref, "OnPlayerLoadGame")
   PRK = PRKFramework.GetInstance()
-  PRK.checkVersion(iFWNeedeVersion,sname)
   RegisterForCustomEvent(PRK, "PRKFReady")
   registerevents()
-  Debug.Notification("FOC_SPController started")
+  if PRK.isReady()
+    DoMagic()
+  endif
 EndEvent
 
 Event PRKFramework.PRKFReady(PRKFramework akSender, Var[] akArgs)
-  PRK.AddSkillsToStart(PSkillsList)
+  DoMagic()
 EndEvent
+
+Function DoMagic()
+  If(Game.IsPluginInstalled("foc_skillspoints_test.esp") && PRK.checkVersion(iFWNeedeVersion,sname))
+    PRK.AddSkillsToStart(PSkillsList)
+  EndIf
+EndFunction
 
 Event Actor.OnPlayerLoadGame(Actor aSender)
   registerevents()
