@@ -1,32 +1,25 @@
-Scriptname FOC_SPController extends Quest
+Scriptname FOC_SPController extends PRKF_quest
 
 actor playerref
 int skillscount
-PRKFramework PRK
 
-String Property sname = "NV Skills" AutoReadOnly
-int Property iVersion = 1 AutoReadOnly
-int Property iFWNeedeVersion = 1 AutoReadOnly
+Function setvariables()
+  sname = "NV Skills"
+  pluginname = "foc_skillspoints_test.esp"
+  iVersion = 1
+  iFWNeededVersion = 1
+  iPPOnLevelUp = 0
+  iSPOnLevelUp = 0
+EndFunction
 
 Event OnInit()
   playerref = Game.GetPlayer()
   RegisterForRemoteEvent(playerref, "OnPlayerLoadGame")
-  PRK = PRKFramework.GetInstance()
-  RegisterForCustomEvent(PRK, "PRKFReady")
   registerevents()
-  if PRK.isReady()
-    DoMagic()
-  endif
-EndEvent
-
-Event PRKFramework.PRKFReady(PRKFramework akSender, Var[] akArgs)
-  DoMagic()
 EndEvent
 
 Function DoMagic()
-  If(Game.IsPluginInstalled("foc_skillspoints_test.esp") && PRK.checkVersion(iFWNeedeVersion,sname))
-    PRK.AddSkillsToStart(PSkillsList)
-  EndIf
+  AddSkillsToStart(PSkillsList)
 EndFunction
 
 Event Actor.OnPlayerLoadGame(Actor aSender)
@@ -48,19 +41,19 @@ EndFunction
 Event OnMenuOpenCloseEvent(string asMenuName, bool abOpening)
   if (asMenuName== "SPECIALMenu")
       if (!abOpening)
-        playerref.SetValue(PSkillsBarter, CalculateStartingSkill(pCharisma))
-        playerref.SetValue(PSkillsCrafting, CalculateStartingSkill(pIntelligence))
-        playerref.SetValue(PSkillsEnergyWeapons, CalculateStartingSkill(pPerception))
-        playerref.SetValue(PSkillsExplosives, CalculateStartingSkill(pPerception))
-        playerref.SetValue(PSkillsGuns, CalculateStartingSkill(pAgility))
-        playerref.SetValue(PSkillsLockPick, CalculateStartingSkill(pPerception))
-        playerref.SetValue(PSkillsMedicine, CalculateStartingSkill(pIntelligence))
-        playerref.SetValue(PSkillsMeleeWeapons, CalculateStartingSkill(pStrength))
-        playerref.SetValue(PSkillsScience, CalculateStartingSkill(pIntelligence))
-        playerref.SetValue(PSkillsSneak, CalculateStartingSkill(pAgility))
-        playerref.SetValue(PSkillsSpeech, CalculateStartingSkill(pCharisma))
-        playerref.SetValue(PSkillsSurvival, CalculateStartingSkill(pEndurance))
-        playerref.SetValue(PSkillsUnarmed, CalculateStartingSkill(pEndurance))
+        playerref.ModValue(PSkillsBarter, CalculateStartingSkill(pCharisma))
+        playerref.ModValue(PSkillsCrafting, CalculateStartingSkill(pIntelligence))
+        playerref.ModValue(PSkillsEnergyWeapons, CalculateStartingSkill(pPerception))
+        playerref.ModValue(PSkillsExplosives, CalculateStartingSkill(pPerception))
+        playerref.ModValue(PSkillsGuns, CalculateStartingSkill(pAgility))
+        playerref.ModValue(PSkillsLockPick, CalculateStartingSkill(pPerception))
+        playerref.ModValue(PSkillsMedicine, CalculateStartingSkill(pIntelligence))
+        playerref.ModValue(PSkillsMeleeWeapons, CalculateStartingSkill(pStrength))
+        playerref.ModValue(PSkillsScience, CalculateStartingSkill(pIntelligence))
+        playerref.ModValue(PSkillsSneak, CalculateStartingSkill(pAgility))
+        playerref.ModValue(PSkillsSpeech, CalculateStartingSkill(pCharisma))
+        playerref.ModValue(PSkillsSurvival, CalculateStartingSkill(pEndurance))
+        playerref.ModValue(PSkillsUnarmed, CalculateStartingSkill(pEndurance))
         ;Debugskills()
         UnRegisterForMenuOpenCloseEvent("SPECIALMenu")
       endif
@@ -95,19 +88,19 @@ EndFunction
 Function OnLevelUpReturnSkills(Var[] a3)
   Debug.Notification("LevelupMenu: skills RETURNED")
   playerref.SetValue(PSkillPoints, 0)
-  playerref.SetValue(PSkillsBarter, a3[0] as float)
-  playerref.SetValue(PSkillsCrafting, a3[1] as float)
-  playerref.SetValue(PSkillsEnergyWeapons, a3[2] as float)
-  playerref.SetValue(PSkillsExplosives, a3[3] as float)
-  playerref.SetValue(PSkillsGuns, a3[4] as float)
-  playerref.SetValue(PSkillsLockPick, a3[5] as float)
-  playerref.SetValue(PSkillsMedicine, a3[6] as float)
-  playerref.SetValue(PSkillsMeleeWeapons, a3[7] as float)
-  playerref.SetValue(PSkillsScience, a3[8] as float)
-  playerref.SetValue(PSkillsSneak, a3[9] as float)
-  playerref.SetValue(PSkillsSpeech, a3[10] as float)
-  playerref.SetValue(PSkillsSurvival, a3[11] as float)
-  playerref.SetValue(PSkillsUnarmed, a3[12] as float)
+  playerref.ModValue(PSkillsBarter, a3[0] as float)
+  playerref.ModValue(PSkillsCrafting, a3[1] as float)
+  playerref.ModValue(PSkillsEnergyWeapons, a3[2] as float)
+  playerref.ModValue(PSkillsExplosives, a3[3] as float)
+  playerref.ModValue(PSkillsGuns, a3[4] as float)
+  playerref.ModValue(PSkillsLockPick, a3[5] as float)
+  playerref.ModValue(PSkillsMedicine, a3[6] as float)
+  playerref.ModValue(PSkillsMeleeWeapons, a3[7] as float)
+  playerref.ModValue(PSkillsScience, a3[8] as float)
+  playerref.ModValue(PSkillsSneak, a3[9] as float)
+  playerref.ModValue(PSkillsSpeech, a3[10] as float)
+  playerref.ModValue(PSkillsSurvival, a3[11] as float)
+  playerref.ModValue(PSkillsUnarmed, a3[12] as float)
   Onrequestskills()
 EndFunction
 ;----------------EOLevelupMenu-------------------------------

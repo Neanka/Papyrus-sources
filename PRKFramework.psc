@@ -6,14 +6,10 @@ int Property iVersion = 1 AutoReadOnly
 
 FormList[] PerkList
 FormList[] SkillsList
-int ITPerkID = 0
-int NWPerkID = 0
-int APPerkID = 0
 int Property BasePPToAdd = 0 AutoReadOnly
 int PPToAdd
 int Property BaseSPToAdd = 0 AutoReadOnly
 int SPToAdd
-bool ready = false
 
 Event OnQuestInit()
   playerref = Game.GetPlayer()
@@ -24,10 +20,6 @@ Event OnQuestInit()
 EndEvent
 
 CustomEvent PRKFReady
-
-bool Function isReady()
-  return ready
-EndFunction
 
 Function registercustomevents()
   RegisterForKey(103)
@@ -44,7 +36,8 @@ Function registercustomevents()
 EndFunction
 
 Function SendPRKFReadyEvent()
-  ready = true
+  Utility.Wait(1)
+  Debug.Notification("PRKF ready")
 	Var[] args = new Var[0]
 	sendCustomEvent("PRKFReady", args)
 EndFunction
@@ -90,7 +83,7 @@ Event OnKeyDown(int keyCode)
     OnLevelUpReady()
   EndIf
   If(keyCode == 100)
-    ;Debug.MessageBox(def.tracesmth())
+    def.tracesmth()
   EndIf
   If(keyCode == 101)
     ;Form stimpak = Game.GetForm(0x23736)
@@ -101,7 +94,7 @@ EndEvent
 
 Function OnLevelUpReady()
 ;  Debug.MessageBox(APPerkID)
-  If (def.SetLVLUPVars(PerkList,SkillsList,PSkillPoints,PPerkPoints) && def.SetPerksIDs(ITPerkID,NWPerkID,APPerkID))
+  If (def.SetLVLUPVars(PerkList,SkillsList,PSkillPoints,PPerkPoints))
     def.openmenu("levelupmenu")
   EndIf
 EndFunction
@@ -120,12 +113,6 @@ EndFunction
 
 Function AddSkillsToStart(FormList afFL)
   SkillsList.Insert(afFL,0)
-EndFunction
-
-Function UniquePerks(int aITPerkID,int aNWPerkID,int aAPPerkID)
-  ITPerkID = aITPerkID
-  NWPerkID = aNWPerkID
-  APPerkID = aAPPerkID
 EndFunction
 
 int iLevel = 1

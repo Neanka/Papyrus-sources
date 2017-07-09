@@ -1,35 +1,17 @@
-Scriptname PRKF_VanillaPerksController extends Quest
+Scriptname PRKF_VanillaPerksController extends PRKF_quest
 
-actor playerref
-PRKFramework PRK
-
-String Property sname = "Vanilla Perks" AutoReadOnly
-int Property iVersion = 1 AutoReadOnly
-int Property iFWNeedeVersion = 1 AutoReadOnly
-
-Event OnQuestInit()
-  playerref = Game.GetPlayer()
-  PRK = PRKFramework.GetInstance()
-  RegisterForCustomEvent(PRK, "PRKFReady")
-  RegisterForRemoteEvent(playerref, "OnPlayerLoadGame")
-  if PRK.isReady()
-    DoMagic()
-  endif
-EndEvent
-
-Event Actor.OnPlayerLoadGame(Actor aSender)
-
-EndEvent
-
-Event PRKFramework.PRKFReady(PRKFramework akSender, Var[] akArgs)
-  DoMagic()
-EndEvent
+Function setvariables()
+  sname = "Vanilla Perks"
+  pluginname = "PRKF_VanillaPerks.esp"
+  iVersion = 1
+  iFWNeededVersion = 1
+  iPPOnLevelUp = 1
+  iSPOnLevelUp = 0
+EndFunction
 
 Function DoMagic()
-  If(Game.IsPluginInstalled("PRKF_VanillaPerks.esp") && PRK.checkVersion(iFWNeedeVersion,sname))
-    PRK.AddPerksToStart(Pvanilla_perks)
-    PRK.AddPPOnLevelUp(1)
-  EndIf
+  AddPerksToStart(Pvanilla_perks)
+  AddPPOnLvlUp()
 EndFunction
 
 FormList Property Pvanilla_perks Auto Const Mandatory

@@ -32,5 +32,3 @@ String Function addexp(int value) global
 EndFunction
 
 bool Function SetLVLUPVars(FormList[] perklist,FormList[] skillslist, ActorValue SP, ActorValue PP) global native
-
-bool Function SetPerksIDs(int ITPerkID,int NWPerkID,int APPerkID) global native

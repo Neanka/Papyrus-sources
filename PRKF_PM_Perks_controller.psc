@@ -1,36 +1,17 @@
-Scriptname PRKF_PM_Perks_controller extends Quest
+Scriptname PRKF_PM_Perks_controller extends PRKF_quest
 
-actor playerref
-PRKFramework PRK
-
-String Property sname = "PM Perks" AutoReadOnly
-int Property iVersion = 1 AutoReadOnly
-int Property iFWNeedeVersion = 1 AutoReadOnly
-
-Event OnQuestInit()
-  playerref = Game.GetPlayer()
-  PRK = PRKFramework.GetInstance()
-  RegisterForRemoteEvent(playerref, "OnPlayerLoadGame")
-  RegisterForCustomEvent(PRK, "PRKFReady")
-  if PRK.isReady()
-    DoMagic()
-  endif
-EndEvent
-
-Event Actor.OnPlayerLoadGame(Actor akSender)
-
-EndEvent
-
-Event PRKFramework.PRKFReady(PRKFramework akSender, Var[] akArgs)
-  DoMagic()
-EndEvent
+Function setvariables()
+  sname = "PM Perks"
+  pluginname = "PRKF_PMPerks.esp"
+  iVersion = 1
+  iFWNeededVersion = 1
+  iPPOnLevelUp = 1
+  iSPOnLevelUp = 0
+EndFunction
 
 Function DoMagic()
-  If(Game.IsPluginInstalled("PRKF_PMPerks.esp") && PRK.checkVersion(iFWNeedeVersion,sname))
-    PRK.UniquePerks(PPM_Intense_training01.GetFormID(),PPM_No_Weaknesses01.GetFormID(),PPM_Almost_Perfect01.GetFormID())
-    PRK.AddPerks(PPM_perks)
-    PRK.AddPPOnLevelUp(1)
-  EndIf
+  AddPerks(PPM_perks)
+  AddPPOnLvlUp()
 EndFunction
 
 FormList Property PPM_perks Auto Const Mandatory
